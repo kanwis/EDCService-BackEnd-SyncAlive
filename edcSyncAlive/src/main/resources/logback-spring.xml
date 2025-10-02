@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- 🔹 กำหนด Pattern สำหรับ Log -->
+	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{0}.%M - %msg%n" />
+<!-- 	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%level] %c{1} [%t] %m%n" /> -->
+
+  <!-- ✅ File Appender (Rolling) -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/edcSyncAliveApp.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archive/edcSyncAliveApp-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+	<!-- ✅ App Log (เก็บ Log ทั้งหมด) -->
+	<appender name="APP_LOG_A80"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/edcSyncAliveApp_a80.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/app-a80-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>7</maxHistory>  <!-- เก็บ Log ไว้ 7 วัน -->
+		</rollingPolicy>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- ตั้งค่าชื่อไฟล์เก็บ Log พร้อมให้บีบอัดเป็น .zip -->
+			<fileNamePattern>logs/archive/app-a80-%d{yyyy-MM-dd}.%i.log.zip
+			</fileNamePattern>
+
+			<!-- ตั้งค่าขนาดสูงสุดของแต่ละไฟล์ log ก่อนหมุนเวียน -->
+			<maxFileSize>10MB</maxFileSize>
+
+			<!-- ตั้งค่าระยะเวลาการเก็บไฟล์ Log -->
+			<maxHistory>30</maxHistory>
+
+			<!-- กำหนดขนาดรวมสูงสุดของไฟล์ log -->
+			<totalSizeCap>1GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+	<appender name="APP_LOG_S80"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/edcSyncAliveApp_s80.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/app-s80-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>7</maxHistory>  <!-- เก็บ Log ไว้ 7 วัน -->
+		</rollingPolicy>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- ตั้งค่าชื่อไฟล์เก็บ Log พร้อมให้บีบอัดเป็น .zip -->
+			<fileNamePattern>logs/archive/app-s80-%d{yyyy-MM-dd}.%i.log.zip
+			</fileNamePattern>
+
+			<!-- ตั้งค่าขนาดสูงสุดของแต่ละไฟล์ log ก่อนหมุนเวียน -->
+			<maxFileSize>10MB</maxFileSize>
+
+			<!-- ตั้งค่าระยะเวลาการเก็บไฟล์ Log -->
+			<maxHistory>30</maxHistory>
+
+			<!-- กำหนดขนาดรวมสูงสุดของไฟล์ log -->
+			<totalSizeCap>1GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- ✅ Error Log (เก็บเฉพาะ ERROR) -->
+	<!-- <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
+		<file>logs/error.log</file> <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> 
+		<fileNamePattern>logs/error-%d{yyyy-MM-dd}.log</fileNamePattern> <maxHistory>7</maxHistory> 
+		</rollingPolicy> <encoder> <pattern>${LOG_PATTERN}</pattern> </encoder> <filter 
+		class="ch.qos.logback.classic.filter.LevelFilter"> <level>ERROR</level> <onMatch>ACCEPT</onMatch> 
+		<onMismatch>DENY</onMismatch> </filter> </appender> -->
+
+	<!-- ✅ loggerA80 Configuration -->
+	<logger name="a80" level="INFO" additivity="false">
+		<appender-ref ref="APP_LOG_A80" />
+		<appender-ref ref="CONSOLE" />  <!-- ส่ง Log ไปที่ Console ด้วย -->
+	</logger>
+
+	<!-- ✅ loggerS80 Configuration -->
+	<logger name="s80" level="INFO" additivity="false">
+		<appender-ref ref="APP_LOG_S80" />
+		<appender-ref ref="CONSOLE" />  <!-- ส่ง Log ไปที่ Console ด้วย -->
+	</logger>
+
+	<!-- ✅ Console Log (ให้แสดงที่ Console ด้วย) -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE"/>
+	</root>
+
+</configuration>
